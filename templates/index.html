@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Skin Cancer AI</title>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #c850c0, #4158d0);
+    margin: 0;
+    padding: 0;
+    color: white;
+}
+
+.container {
+    width: 70%;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+input[type="file"] {
+    margin: 15px;
+}
+
+input[type="submit"] {
+    padding: 12px 25px;
+    border: none;
+    background: linear-gradient(45deg, #ff6ec4, #7873f5);
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+input[type="submit"]:hover {
+    transform: scale(1.1);
+    background: linear-gradient(45deg, #7873f5, #ff6ec4);
+}
+
+.section {
+    background: rgba(255,255,255,0.2);
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 25px;
+    text-align: left;
+    transition: 0.3s;
+}
+
+.section:hover {
+    transform: translateY(-5px);
+}
+
+h2 {
+    border-bottom: 2px solid rgba(255,255,255,0.5);
+    padding-bottom: 5px;
+}
+
+img {
+    margin-top: 15px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+img:hover {
+    transform: scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🧠 Skin Cancer Detection AI</h1>
+
+    <!-- GİRİŞ -->
+    <div class="section" style="text-align:center;">
+    <p>📤 Görsel yükleyerek analiz başlat</p>
+
+    <form action="/predict" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" required><br>
+        <input type="submit" value="🔍 Tahmin Et">
+    </form>
+</div>
+
+    <!-- SADECE TAHMİN YAPILDIKTAN SONRA GÖZÜKÜR -->
+    {% if prediction %}
+
+    <!-- SONUÇ -->
+    <div class="section">
+    <h2>🔍 Tahmin Sonucu</h2>
+
+    <img src="{{ url_for('static', filename=filename) }}" width="250">
+
+    <h3>Sonuç:</h3>
+    <p style="font-size:20px; color:#ffe600;"><b>{{ prediction }}</b></p>
+</div>
+
+    <!-- PROJE HAKKINDA -->
+    <div class="section">
+        <h2>📘 Proje Hakkında</h2>
+
+        <p><b>Problem:</b> Bu projede cilt kanseri türlerinin otomatik olarak sınıflandırılması problemi ele alınmıştır.</p>
+
+        <p><b>Amaç:</b> Yapay zeka kullanarak kullanıcıların yüklediği cilt görüntülerinden hastalık türünü doğru ve hızlı bir şekilde tahmin eden bir sistem geliştirmek.</p>
+
+        <p><b>Önemi:</b> Cilt kanserinde erken teşhis hayati önem taşır. Bu sistem, doktorlara yardımcı olabilecek hızlı bir ön analiz sağlar.</p>
+
+        <p><b>Veri Seti:</b> HAM10000 veri seti kullanılmıştır. Toplam 10015 adet dermatoskopik görüntü içermektedir ve 7 farklı sınıfa ayrılmıştır.</p>
+    </div>
+
+    <!-- VERİ SETİ -->
+    <div class="section">
+        <h2>📂 Veri Seti ve Ön İşleme</h2>
+
+        <p>Veri seti aşağıdaki 7 sınıftan oluşmaktadır:</p>
+        <ul>
+            <li>akiec</li>
+            <li>bcc</li>
+            <li>bkl</li>
+            <li>df</li>
+            <li>mel</li>
+            <li>nv</li>
+            <li>vasc</li>
+        </ul>
+
+        <p><b>Ön işleme adımları:</b></p>
+        <ul>
+            <li>Görseller 224x224 boyutuna yeniden boyutlandırıldı</li>
+            <li>Pixel değerleri normalize edildi (0-1 aralığı)</li>
+            <li>Veri eğitim ve test olarak ayrıldı</li>
+        </ul>
+    </div>
+
+    <!-- MODEL -->
+    <div class="section">
+        <h2>🧠 Model Bilgisi</h2>
+
+        <p>Bu projede Convolutional Neural Network (CNN) kullanılmıştır.</p>
+
+        <p><b>Model katmanları:</b></p>
+        <ul>
+            <li>Conv2D + ReLU aktivasyon</li>
+            <li>MaxPooling katmanları</li>
+            <li>Flatten katmanı</li>
+            <li>Fully Connected (Dense) katmanlar</li>
+        </ul>
+
+         <p><b>Hiperparametreler:</b></p>
+        <ul>
+            <li>Epoch: 10</li>
+            <li>Batch Size: 32</li>
+            <li>Optimizer: Adam</li>
+            <li>Loss Function: Categorical Crossentropy</li>
+        </ul>
+    </div>
+
+    <!-- GRAFİKLER -->
+    <div class="section">
+        <h2>📊 Grafikler ve Performans</h2>
+
+        <h3>Confusion Matrix</h3>
+        <img src="{{ url_for('static', filename='confusion_matrix.png') }}" width="400">
+
+        <h3>ROC Eğrisi</h3>
+        <img src="{{ url_for('static', filename='roc_curve.png') }}" width="400">
+
+        <h3>Accuracy Grafiği</h3>
+        <img src="{{ url_for('static', filename='accuracy.png') }}" width="400">
+
+        <h3>Loss Grafiği</h3>
+        <img src="{{ url_for('static', filename='loss.png') }}" width="400">
+    </div>
+
+    <!-- YORUM -->
+    <div class="section">
+        <h2>📈 Sonuç ve Yorum</h2>
+
+        <p>Model, test verisi üzerinde yüksek doğruluk oranı elde etmiştir.</p>
+
+        <p>Confusion Matrix ve ROC eğrisi incelendiğinde modelin sınıflar arasında başarılı ayrım yaptığı görülmektedir.</p>
+
+        <p>Accuracy ve Loss grafiklerine göre model dengeli öğrenmiş ve aşırı öğrenme (overfitting) gözlenmemiştir.</p>
+    </div>
+    <div class="section">
+        <h2>📚 Kaynakça</h2>
+
+        <p>HAM10000 Dataset - Harvard Dataverse</p>
+        <p>TensorFlow & Keras Documentation</p>
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+Flask==3.1.0
+gunicorn==25.3.0
+matplotlib==3.10.8
+numpy==2.2.6
+pillow==12.1.1
+scikit-learn==1.7.2
+tensorflow==2.21.0
+gdown==5.2.1
